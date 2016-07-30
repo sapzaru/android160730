@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -33,14 +35,38 @@ public class CrimeListFragment extends Fragment {
         mCrimes = CrimeLab.get(getActivity()).getCrimes();
     }
 
+    // CustomListView (Inner Class)
+    class CrimeAdapter extends ArrayAdapter<Crime> {
+        public CrimeAdapter() {
+            super(getActivity(), 0, mCrimes);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_crime, null);
+            }
+
+            Crime c = mCrimes.get(position);
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.crime_list_item_titleTextView);
+            TextView dateTextView = (TextView) convertView.findViewById(R.id.crime_list_item_dateTextView);
+            CheckBox solvedCheckBox = (CheckBox) convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
+
+            titleTextView.setText(c.getTitle());
+            dateTextView.setText(c.getDate().toString());
+            solvedCheckBox.setChecked(c.isSolved());
+
+            return convertView;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_crime_list, container, false);
         crimeListView = (ListView) v.findViewById(R.id.crimeListView);
-        ArrayAdapter<Crime> adapter = new ArrayAdapter<Crime>(getActivity(),
-                            android.R.layout.simple_list_item_1, mCrimes);
+        CrimeAdapter adapter = new CrimeAdapter();
         crimeListView.setAdapter(adapter);
 
         crimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
