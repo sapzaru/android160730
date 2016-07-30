@@ -1,10 +1,12 @@
-package com.example.c.criminalintent;
+package com.example.c.criminalintent.Common;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.c.criminalintent.R;
 
 /**
  * Created by c on 2016-07-30.

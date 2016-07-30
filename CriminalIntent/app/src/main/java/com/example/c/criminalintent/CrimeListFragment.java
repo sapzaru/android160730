@@ -14,6 +14,9 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.c.criminalintent.Data.Crime;
+import com.example.c.criminalintent.Data.CrimeLab;
+
 import java.util.ArrayList;
 
 
@@ -72,14 +75,19 @@ public class CrimeListFragment extends Fragment {
         crimeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Crime c = mCrimes.get(position);
-
-                Intent intent = new Intent(getActivity(), CrimeActivity.class);
-                intent.putExtra("id", c.getId());
+                Crime crime = mCrimes.get(position);
+                Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
+                intent.putExtra(CrimeFragment.EXTRA_ID, crime.getId());
                 startActivity(intent);
             }
         });
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        CrimeAdapter adapter = (CrimeAdapter) crimeListView.getAdapter();
+        adapter.notifyDataSetChanged(); // 변경된 데이터 갱신
+    }
 }

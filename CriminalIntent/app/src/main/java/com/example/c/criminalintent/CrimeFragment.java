@@ -14,6 +14,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import com.example.c.criminalintent.Data.Crime;
+import com.example.c.criminalintent.Data.CrimeLab;
+
 import java.util.UUID;
 
 
@@ -26,8 +29,20 @@ public class CrimeFragment extends Fragment {
     Button mDateButton;
     CheckBox mSolvedCheckBox;
 
+    public static final String EXTRA_ID = "com.example.c.criminalintent.crime_id";
+
     public CrimeFragment() {
         // Required empty public constructor
+    }
+
+    public static CrimeFragment newInstance(UUID crimeId) {
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_ID, crimeId);
+
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
@@ -41,7 +56,7 @@ public class CrimeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
-        UUID crimeId = (UUID) getActivity().getIntent().getSerializableExtra("id");
+        UUID crimeId = (UUID) getArguments().getSerializable(EXTRA_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
 
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
