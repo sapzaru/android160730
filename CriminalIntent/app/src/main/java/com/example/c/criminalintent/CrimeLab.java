@@ -16,6 +16,13 @@ public class CrimeLab {
     private CrimeLab(Context c) {
         mAppContext = c;
         mCrimes = new ArrayList<Crime>();
+
+        for (int i = 0; i < 100; i++) {
+            Crime crime = new Crime();
+            crime.setTitle("범죄 #" + i);
+            crime.setSolved(i % 2 == 0);
+            mCrimes.add(crime);
+        }
     }
 
     public ArrayList<Crime> getCrimes() {
