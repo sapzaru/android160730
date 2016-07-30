@@ -6,6 +6,7 @@
     tools:context="com.example.c.criminalintent.CrimeFragment">
 
     <TextView
+        style="@style/BigTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title" />
@@ -17,16 +18,19 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        style="@style/BigTextStyle"
         android:text="@string/crime_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/crime_date"
         android:text="@string/hello_blank_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <CheckBox
+        android:id="@+id/crime_solved"
         android:text="@string/crime_resolve"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
