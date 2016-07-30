@@ -12,6 +12,11 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
 
+    @Override
+    public String toString() {
+        return mTitle;
+    }
+
     public Crime() {
         mId = UUID.randomUUID();
         mDate = new Date();
