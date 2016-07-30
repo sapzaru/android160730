@@ -1,10 +1,10 @@
 package com.example.c.criminalintent;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +73,10 @@ public class CrimeListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Crime c = mCrimes.get(position);
-                Log.d("crime", c.getTitle() + "clicked");
+
+                Intent intent = new Intent(getActivity(), CrimeActivity.class);
+                intent.putExtra("id", c.getId());
+                startActivity(intent);
             }
         });
         return v;
