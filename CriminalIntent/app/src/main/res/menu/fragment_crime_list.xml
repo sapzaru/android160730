@@ -5,4 +5,8 @@
           android:title="new crime"
           android:icon="@mipmap/ic_add"
           app:showAsAction="ifRoom|withText"/>
+
+    <item android:id="@+id/menu_item_show_subtitle"
+          android:title="show subtitle"
+          app:showAsAction="never"/>
 </menu>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -61,6 +62,16 @@ public class CrimeListFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
                 intent.putExtra(CrimeFragment.EXTRA_ID, crime.getId());
                 startActivity(intent);
+                return true;
+            case R.id.menu_item_show_subtitle:
+                int count = CrimeLab.get(getActivity()).getCrimes().size();
+
+                // 임의로 설정된 스트링 포멧에 맞춰서 반환할수 있다.
+                String str = getString(R.string.subtitle_format, count);
+
+                // 서브타이틀에 바로 접근할수 없어서 현재 상속받은 액티비티를 가져와서 접근한다.
+                AppCompatActivity activity = (AppCompatActivity) getActivity();
+                activity.getSupportActionBar().setSubtitle(str); // null을 넣으면 사라진다.
                 return true;
         }
         return super.onOptionsItemSelected(item);
