@@ -17,7 +17,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CrimePagerActivity">
+
+        <!-- parentActivityName을 넣어주면 타이틀바에 여기서 설정된 부모 액티비티로 돌아가는 버튼이 생긴다.
+         업버튼 효과.. 이걸 백버튼 효과로 바꾸고 싶으면 업버튼 오버라이드를 하면 된다. -->
+        <activity android:name=".CrimePagerActivity"
+            android:parentActivityName=".CrimeListActivity">
         </activity>
     </application>
 

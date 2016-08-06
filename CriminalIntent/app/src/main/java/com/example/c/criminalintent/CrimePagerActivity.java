@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import com.example.c.criminalintent.Data.Crime;
 import com.example.c.criminalintent.Data.CrimeLab;
@@ -67,5 +68,17 @@ public class CrimePagerActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // 호출된 액티비티로 가는걸(업버튼 효과) 강제로 back 동작 하도록 해줄수 있다.
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
