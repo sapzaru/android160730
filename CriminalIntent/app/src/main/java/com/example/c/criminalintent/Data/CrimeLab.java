@@ -28,7 +28,7 @@ public class CrimeLab {
 
     public ArrayList<Crime> getCrimes() {
         ArrayList<Crime> crimes = new ArrayList<Crime>();
-        // 모든 데이터를 가져오게..
+        // 모든 데이터를 가져오게.. null, null
         CrimeCursorWrapper cursor = queryCrimes(null, null);
 
         try {
@@ -43,7 +43,22 @@ public class CrimeLab {
     }
 
     public Crime getCrime(UUID id) {
-        return null;
+        // todo : toto 탭에서 확인 가능
+
+        CrimeCursorWrapper cursor = queryCrimes(
+                CrimeTable.Cols.UUID + " = ?",
+                new String[] { id.toString() }
+        );
+
+        try {
+            if (cursor.getCount() == 0)
+                return null;
+
+            cursor.moveToFirst();
+            return cursor.getCrime();
+        } finally {
+            cursor.close();
+        }
     }
 
     public static CrimeLab get(Context c) {
