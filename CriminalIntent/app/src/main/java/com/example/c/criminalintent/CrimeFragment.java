@@ -118,4 +118,11 @@ public class CrimeFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // 화면이 사라지기 시작할때 저장 하도록했음
+        CrimeLab.get(getActivity()).update(mCrime);
+    }
 }

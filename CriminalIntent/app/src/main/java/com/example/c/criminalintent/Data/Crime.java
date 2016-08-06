@@ -22,6 +22,11 @@ public class Crime {
         mDate = new Date();
     }
 
+    public Crime(UUID id) {
+        mId = id;
+        mDate = new Date();
+    }
+
     public String getTitle() {
         return mTitle;
     }
