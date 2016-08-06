@@ -88,8 +88,10 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+
                 // 반환 결과를 나한테 줘..
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+
                 dialog.show(getFragmentManager(), "Dialog");
             }
         });
@@ -107,6 +109,7 @@ public class CrimeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 반환 결과 받기
         if (requestCode == REQUEST_DATE) {
             if (resultCode == Activity.RESULT_OK) {
                 Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
