@@ -1,6 +1,8 @@
 package com.example.c.criminalintent;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import com.example.c.criminalintent.Data.Crime;
 import com.example.c.criminalintent.Data.CrimeLab;
 
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -29,6 +32,7 @@ public class CrimeFragment extends Fragment {
     Button mDateButton;
     CheckBox mSolvedCheckBox;
 
+    private static int REQUEST_DATE = 100;
     public static final String EXTRA_ID = "com.example.c.criminalintent.crime_id";
 
     public CrimeFragment() {
@@ -84,6 +88,8 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+                // 반환 결과를 나한테 줘..
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                 dialog.show(getFragmentManager(), "Dialog");
             }
         });
@@ -99,4 +105,14 @@ public class CrimeFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_DATE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+                mCrime.setDate(date);
+                mDateButton.setText(mCrime.getDate().toString());
+            }
+        }
+    }
 }
