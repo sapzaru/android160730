@@ -123,6 +123,8 @@ public class CrimeFragment extends Fragment {
                 // 암시적으로 인텐트 호출
                 // 만약에 어플리케이션 필터에 이 액션을 지정해두면
                 // 목록에 그 어플도 뜨게 된다.
+                // 카메라를 직접 사용하는게 아니고 카메라를 쓸수 있는 앱을 호출하는것이기 때문에
+                // 이 경우에는 매니패스트에 카메라 퍼미션을 안줘도 가능하다.
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 Uri uri = Uri.fromFile(mPhotoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
