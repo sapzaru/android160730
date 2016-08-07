@@ -3,10 +3,9 @@
     <item android:id="@+id/menu_item_caffelatte"
           android:title="caffe latte"/>
 
-    <item android:title="americano"
-          android:id="@+id/menu_item_americano"/>
+    <item android:id="@+id/menu_item_americano"
+          android:title="americano"/>
 
     <item android:id="@+id/menu_item_caffemocca"
           android:title="caffe mocca"/>
-
 </menu>
