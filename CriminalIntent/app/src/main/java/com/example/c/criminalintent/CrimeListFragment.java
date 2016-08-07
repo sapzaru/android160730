@@ -1,6 +1,7 @@
 package com.example.c.criminalintent;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,24 @@ public class CrimeListFragment extends Fragment {
     private ArrayList<Crime> mCrimes;
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+    }
+
+    // 호출하는 액티비티에 어태치하는 개념
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
 
     public CrimeListFragment() {
         // Required empty public constructor
@@ -102,9 +121,11 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             // 명시적으로 어느 클래스로 가달라고 하는 명시적 인텐트
-            Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
-            intent.putExtra(CrimeFragment.EXTRA_ID, mCrime.getId());
-            startActivity(intent);
+            //Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
+            //intent.putExtra(CrimeFragment.EXTRA_ID, mCrime.getId());
+            //startActivity(intent);
+
+            mCallbacks.onCrimeSelected(mCrime);
         }
     }
 
