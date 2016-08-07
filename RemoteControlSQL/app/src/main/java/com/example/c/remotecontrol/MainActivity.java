@@ -72,40 +72,5 @@ public class MainActivity extends AppCompatActivity {
                 workingTextView.setText("0");
             }
         });
-
-        /*
-        Button zeroButton = (Button) findViewById(R.id.zeroButton);
-        Button oneButton = (Button) findViewById(R.id.oneButton);
-        Button enterButton = (Button) findViewById(R.id.enterButton);
-
-        View.OnClickListener numberListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 여기서 v는 자신 (버튼)
-                Button btn = (Button) v;
-                String working = workingTextView.getText().toString();
-                String str = btn.getText().toString();
-
-                if (working.equals("0")) {
-                    workingTextView.setText(str);
-                } else {
-                    workingTextView.setText(working + str);
-                }
-            }
-        };
-
-        zeroButton.setOnClickListener(numberListener);
-        oneButton.setOnClickListener(numberListener);
-
-        enterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = workingTextView.getText().toString();
-                selectedTextView.setText(str);
-                workingTextView.setText("0");
-            }
-        });
-
-        */
     }
 }
