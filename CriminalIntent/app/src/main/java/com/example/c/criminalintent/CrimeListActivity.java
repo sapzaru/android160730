@@ -20,7 +20,6 @@ public class CrimeListActivity extends SingleFragmentActivity implements CrimeLi
 
     @Override
     public void onCrimeSelected(Crime crime) {
-
         // null이면 핸드폰, 아니면 태블릿
         if (findViewById(R.id.detail_fragment_container) == null) {
             Intent intent = new Intent(this, CrimePagerActivity.class);
