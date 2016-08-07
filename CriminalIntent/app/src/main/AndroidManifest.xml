@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.c.criminalintent">
 
+    <!-- 현재 앱의 패키지 폴더에 저장하는것이 아니면 EXTERNAL_STORAGE 이다. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

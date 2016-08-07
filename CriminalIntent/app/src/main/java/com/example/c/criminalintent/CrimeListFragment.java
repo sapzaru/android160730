@@ -101,6 +101,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            // 명시적으로 어느 클래스로 가달라고 하는 명시적 인텐트
             Intent intent = new Intent(getActivity(), CrimePagerActivity.class);
             intent.putExtra(CrimeFragment.EXTRA_ID, mCrime.getId());
             startActivity(intent);

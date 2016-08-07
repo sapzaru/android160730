@@ -5,17 +5,44 @@
     android:orientation="vertical"
     tools:context="com.example.c.criminalintent.CrimeFragment">
 
-    <TextView
-        style="@style/BigTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title" />
-
-    <EditText
-        android:hint="@string/crime_title_hint"
-        android:id="@+id/crime_title"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/tulips"
+                android:scaleType="centerCrop"
+                android:id="@+id/crime_photo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+            <ImageButton
+                android:src="@android:drawable/ic_menu_camera"
+                android:id="@+id/crime_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                style="@style/BigTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title" />
+
+            <EditText
+                android:hint="@string/crime_title_hint"
+                android:id="@+id/crime_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         style="@style/BigTextStyle"

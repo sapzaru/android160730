@@ -12,6 +12,10 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
 
+    public String getPhotoFileName() {
+        return "img_" + getId().toString() + ".jpg";
+    }
+
     @Override
     public String toString() {
         return mTitle;
