@@ -37,7 +37,7 @@ public class CrimeListFragment extends Fragment {
         void onCrimeSelected(Crime crime);
     }
 
-    // 호출하는 액티비티에 어태치하는 개념
+    // 호출하는 액티비티에 어태치하는 개념 (CrimeListActivity)
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
