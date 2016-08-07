@@ -21,6 +21,7 @@ import java.util.List;
 public class FlickrFetchr {
     private static final String API_KEY = "9289b8daaf67da1c62623b2ff2c18e5f";
 
+    // 좀 오래되긴 한듯한데.. loopj 라이브러리 같은걸 써도 된다.
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -52,7 +53,7 @@ public class FlickrFetchr {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public void fetchItems() {
+    public ArrayList<GalleryItem> fetchItems() {
         ArrayList<GalleryItem> items = new ArrayList<>();
 
         String url = Uri.parse("https://api.flickr.com/services/rest/")
@@ -76,9 +77,13 @@ public class FlickrFetchr {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return items;
     }
 
     private void parseItem(List<GalleryItem> items, JSONObject jsonBody) throws JSONException {
+        // 여기선 직접 파싱해서 쓰는데, Gson 같은 라이브러리를 써도 된다.
+
         JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
         JSONArray photoJsonArray = photosJsonObject.getJSONArray("photo");
         for (int i = 0; i < photoJsonArray.length(); i++) {
