@@ -1,5 +1,6 @@
 package com.example.c.photogallery;
 
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -27,15 +28,17 @@ public class PhotoGalleryFragment extends Fragment {
 
     // 뷰홀더 (리사이클러뷰 어댑터가 가져다가 작업)
     class PhotoHolder extends RecyclerView.ViewHolder {
-        private TextView mTitleTextView;
+        private ImageView mItemImageView;
 
         public PhotoHolder(View itemView) {
             super(itemView);
-            mTitleTextView = (TextView) itemView;
+            // 갤러리아이템의 루트가 이미지뷰라서 이렇게 가능
+            mItemImageView = (ImageView) itemView;
         }
 
-        public void bindGalleryItem(GalleryItem item) {
-            mTitleTextView.setText(item.toString());
+        public void bindDrawable(Drawable drawable) {
+            // 외부에서 만들어서 준비가 된걸 넘겨서 세팅만.. (네트워크 속도 문제..)
+            mItemImageView.setImageDrawable(drawable);
         }
     }
 
@@ -49,9 +52,10 @@ public class PhotoGalleryFragment extends Fragment {
 
         @Override
         public PhotoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            // inflation 하는 부분인데 여기선 임시로 간단히 textView만 넘기도록..
-            TextView textView = new TextView(getActivity());
-            return new PhotoHolder(textView);
+            // inflation 하는 부분
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View v = inflater.inflate(R.layout.gallery_item, parent, false);
+            return new PhotoHolder(v);
         }
 
         @Override
@@ -59,7 +63,8 @@ public class PhotoGalleryFragment extends Fragment {
             // 스크롤되면서 데이터 바인드 시켜주는 부분
             // 뷰홀더에 멀 해라 알려주는 부분..
             GalleryItem item = mGalleryItems.get(position);
-            holder.bindGalleryItem(item);
+            Drawable d = getResources().getDrawable(R.mipmap.ic_launcher);
+            holder.bindDrawable(d);
         }
 
         @Override
