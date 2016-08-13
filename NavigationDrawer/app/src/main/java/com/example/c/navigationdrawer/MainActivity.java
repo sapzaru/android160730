@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
         if(fragment == null) {
-            fragment = BlankFragment.newInstance("a","b");
+            fragment = ViewPagerFragment.newInstance();//BlankFragment.newInstance("a","b");
 
             FragmentTransaction ft = fm.beginTransaction();
             ft.add(R.id.fragmentContainer, fragment);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             if(fragment != null) {
-                fragment = BlankFragment.newInstance("c","d");
+                fragment = ViewPagerFragment.newInstance();//BlankFragment.newInstance("c","d");
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.replace(R.id.fragmentContainer, fragment);
                 ft.commit();
