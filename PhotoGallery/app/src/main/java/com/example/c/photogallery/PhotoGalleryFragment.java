@@ -1,6 +1,5 @@
 package com.example.c.photogallery;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -126,8 +125,7 @@ public class PhotoGalleryFragment extends Fragment {
 
         updateItems();
 
-        Intent intent = PollService.newIntent(getActivity());
-        getActivity().startService(intent);
+        //PollService.setServiceAlarm(getActivity(), true);
 
         // 썸네일 다운로더
         mThumbnailDownloader = new ThumbnailDownloader(responseHandler);
@@ -193,6 +191,9 @@ public class PhotoGalleryFragment extends Fragment {
             QueryPreperence.setStoredQuery(getActivity(), null);
             updateItems();
             return true;
+        } else if (item.getItemId() == R.id.menu_item_toggle_polling) {
+            boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
+            PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
         }
         return super.onOptionsItemSelected(item);
     }

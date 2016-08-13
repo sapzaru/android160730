@@ -1,15 +1,19 @@
 package com.example.c.photogallery;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.List;
 
 // 알람 매니저가 일정시간마다 호출하게끔..
 public class PollService extends IntentService {
+    private static final int POLL_INTERVAL = 1000 * 10; // 60초
 
     public PollService() {
         super("PollService");
@@ -17,6 +21,23 @@ public class PollService extends IntentService {
 
     public static Intent newIntent(Context context) {
         return new Intent(context, PollService.class);
+    }
+
+    public static void setServiceAlarm(Context context, boolean isOn) {
+        Intent intent = PollService.newIntent(context);
+        PendingIntent pIntent = PendingIntent.getService(context, 0, intent, 0);
+        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+
+        if (isOn) {
+            am.setInexactRepeating(
+                    AlarmManager.ELAPSED_REALTIME,
+                    SystemClock.elapsedRealtime(),
+                    POLL_INTERVAL,
+                    pIntent);
+        } else {
+            am.cancel(pIntent);
+            pIntent.cancel();
+        }
     }
 
     @Override
@@ -63,5 +84,14 @@ public class PollService extends IntentService {
         boolean isNetworkConnected = isNetworkAvailable && cm.getActiveNetworkInfo().isConnected();
 
         return isNetworkConnected;
+    }
+
+    public static boolean isServiceAlarmOn(Context context) {
+        Intent intent = PollService.newIntent(context);
+        PendingIntent pIntent =
+                PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE);
+        // FLAG_NO_CREATE 플래그로 생성되어 있는지 없는지 확인
+        // 이미 세팅이 되어있으면 true
+        return pIntent != null;
     }
 }
