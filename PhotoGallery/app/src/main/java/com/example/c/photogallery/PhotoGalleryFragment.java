@@ -86,10 +86,16 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     // AsyncTask
-    class FetchItemsTask extends AsyncTask<String, Void, ArrayList<GalleryItem>> {
+    class FetchItemsTask extends AsyncTask<Void, Void, ArrayList<GalleryItem>> {
         // 쓰레드에서 직접 ui에 접근하면 크래쉬가 나는데
         // AsyncTask는 쓰레드와 핸들러(UI쪽)가 합쳐진 개념으로
         // ui쪽을 호출하여도 된다.
+
+        String query;
+
+        public FetchItemsTask(String query) {
+            this.query = query;
+        }
 
         @Override
         protected void onPostExecute(ArrayList<GalleryItem> galleryItems) {
@@ -100,13 +106,13 @@ public class PhotoGalleryFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<GalleryItem> doInBackground(String... params) {
+        protected ArrayList<GalleryItem> doInBackground(Void... params) {
             // 쓰레드 내부라고 보면 된다.
             // 여기서 리턴한게 onPostExecute로 넘어간다.
-            if (params[0].equals(""))
+            if (query == null)
                 return new FlickrFetchr().fetchRecentPhotos();
             else
-                return new FlickrFetchr().searchPhotos(params[0]);
+                return new FlickrFetchr().searchPhotos(query);
         }
     }
 
@@ -118,7 +124,7 @@ public class PhotoGalleryFragment extends Fragment {
         // 메뉴가 있다는걸 알려줘야 onCreateOptionsMenu()가 호출됨
         setHasOptionsMenu(true);
 
-        new FetchItemsTask().execute("");
+        updateItems();
 
         // 썸네일 다운로더
         mThumbnailDownloader = new ThumbnailDownloader(responseHandler);
@@ -160,7 +166,9 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d("SearchView", "QueryText : " + query);
-                new FetchItemsTask().execute(query);
+                QueryPreperence.setStoredQuery(getActivity(), query);
+
+                updateItems();
                 return false;
             }
 
@@ -169,6 +177,21 @@ public class PhotoGalleryFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private void updateItems() {
+        String query = QueryPreperence.getStoredQuery(getActivity());
+        new FetchItemsTask(query).execute();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_clear) {
+            QueryPreperence.setStoredQuery(getActivity(), null);
+            updateItems();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
