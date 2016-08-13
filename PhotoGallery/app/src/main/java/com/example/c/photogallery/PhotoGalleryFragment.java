@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class PhotoGalleryFragment extends Fragment {
     RecyclerView mPhotoRecyclerView;
     private ArrayList<GalleryItem> mItems = new ArrayList<>();
+    private ThumbnailDownloader mThumbnailDownloader;
 
     public static PhotoGalleryFragment newInstance() {
         PhotoGalleryFragment fragment = new PhotoGalleryFragment();
@@ -65,6 +66,9 @@ public class PhotoGalleryFragment extends Fragment {
             GalleryItem item = mGalleryItems.get(position);
             Drawable d = getResources().getDrawable(R.mipmap.ic_launcher);
             holder.bindDrawable(d);
+
+            // 다운로드
+            mThumbnailDownloader.queueThumbnail(item.getUrl());
         }
 
         @Override
@@ -100,6 +104,11 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         new FetchItemsTask().execute();
 
+        // 썸네일 다운로더
+        mThumbnailDownloader = new ThumbnailDownloader();
+        mThumbnailDownloader.start();
+        mThumbnailDownloader.getLooper();   // 루퍼를 준비시켜라
+
         /*
         // 진저브레드 이후에는 네트워크는 다른 쓰레드에서 해야함..
         FlickrFetchr f = new FlickrFetchr();
@@ -110,6 +119,14 @@ public class PhotoGalleryFragment extends Fragment {
             e.printStackTrace();
         }
         */
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // 썸네일 다운로더 종료
+        mThumbnailDownloader.quit();
     }
 
     @Nullable
