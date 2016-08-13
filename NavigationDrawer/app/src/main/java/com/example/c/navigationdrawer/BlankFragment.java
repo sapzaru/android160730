@@ -60,6 +60,8 @@ public class BlankFragment extends Fragment {
                              Bundle savedInstanceState) {
         TextView textView = new TextView(getActivity());
         textView.setText(R.string.hello_blank_fragment);
+        textView.append(mParam1);
+        textView.append(mParam2);
         return textView;
     }
 

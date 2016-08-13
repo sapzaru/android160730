@@ -23,9 +23,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
+        android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent">
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
