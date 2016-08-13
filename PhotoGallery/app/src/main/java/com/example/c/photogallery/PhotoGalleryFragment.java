@@ -1,13 +1,18 @@
 package com.example.c.photogallery;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,7 +25,7 @@ import java.util.ArrayList;
 public class PhotoGalleryFragment extends Fragment {
     RecyclerView mPhotoRecyclerView;
     private ArrayList<GalleryItem> mItems = new ArrayList<>();
-    private ThumbnailDownloader mThumbnailDownloader;
+    private ThumbnailDownloader<PhotoHolder> mThumbnailDownloader;
 
     public static PhotoGalleryFragment newInstance() {
         PhotoGalleryFragment fragment = new PhotoGalleryFragment();
@@ -68,7 +73,7 @@ public class PhotoGalleryFragment extends Fragment {
             holder.bindDrawable(d);
 
             // 다운로드
-            mThumbnailDownloader.queueThumbnail(item.getUrl());
+            mThumbnailDownloader.queueThumbnail(holder, item.getUrl());
         }
 
         @Override
@@ -84,30 +89,47 @@ public class PhotoGalleryFragment extends Fragment {
         // ui쪽을 호출하여도 된다.
 
         @Override
-        protected ArrayList<GalleryItem> doInBackground(Void... params) {
-            // 쓰레드 내부라고 보면 된다.
-            // 여기서 리턴한게 onPostExecute로 넘어간다.
-            return new FlickrFetchr().fetchItems();
-        }
-
-        @Override
         protected void onPostExecute(ArrayList<GalleryItem> galleryItems) {
             super.onPostExecute(galleryItems);
             // 쓰레드 처리가 끝나고 UI단 처리
             mItems = galleryItems;
             setupAdapter();
         }
+
+        @Override
+        protected ArrayList<GalleryItem> doInBackground(Void... params) {
+            // 쓰레드 내부라고 보면 된다.
+            // 여기서 리턴한게 onPostExecute로 넘어간다.
+            return new FlickrFetchr().searchPhotos("android");
+        }
     }
+
+    Handler responseHandler = new Handler();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 메뉴가 있다는걸 알려줘야 onCreateOptionsMenu()가 호출됨
+        setHasOptionsMenu(true);
+
         new FetchItemsTask().execute();
 
         // 썸네일 다운로더
-        mThumbnailDownloader = new ThumbnailDownloader();
+        mThumbnailDownloader = new ThumbnailDownloader(responseHandler);
+        mThumbnailDownloader.setThumbnailLoadListener(
+                new ThumbnailDownloader.ThumbnailLoadListener<PhotoHolder>() {
+                    @Override
+                    public void onThumbnailDownloaded(PhotoHolder target, Bitmap thumbnail) {
+                        // 프래그먼트가 없어졌을 경우를 방지
+                        if (isAdded()) {
+                            Drawable drawable = new BitmapDrawable(getResources(), thumbnail);
+                            target.bindDrawable(drawable);
+                        }
+                    }
+                }
+        );
         mThumbnailDownloader.start();
-        mThumbnailDownloader.getLooper();   // 루퍼를 준비시켜라
+        mThumbnailDownloader.getLooper();   // 이걸 호출하면 onLooperPrepared()가 호출된다.
 
         /*
         // 진저브레드 이후에는 네트워크는 다른 쓰레드에서 해야함..
@@ -122,10 +144,20 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_photo_gallery, menu);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mThumbnailDownloader.clearQueue();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-
-        // 썸네일 다운로더 종료
         mThumbnailDownloader.quit();
     }
 

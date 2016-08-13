@@ -20,6 +20,15 @@ import java.util.List;
  */
 public class FlickrFetchr {
     private static final String API_KEY = "9289b8daaf67da1c62623b2ff2c18e5f";
+    private static final String METHOD_RECENT = "flickr.photos.getRecent";
+    private static final String METHOD_SEARCH = "flickr.photos.search";
+    private static final Uri ENDPOINT = Uri.parse("https://api.flickr.com/services/rest/")
+            .buildUpon()
+            .appendQueryParameter("api_key", API_KEY)
+            .appendQueryParameter("format", "json")
+            .appendQueryParameter("nojsoncallback", "1")
+            .appendQueryParameter("extras", "url_s")    // url_s는 스몰사이즈 이미지
+            .build();
 
     // 좀 오래되긴 한듯한데.. loopj 라이브러리 같은걸 써도 된다.
     public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -53,17 +62,26 @@ public class FlickrFetchr {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public ArrayList<GalleryItem> fetchItems() {
-        ArrayList<GalleryItem> items = new ArrayList<>();
+    public ArrayList<GalleryItem> fetchRecentPhotos() {
+        String url = buildUrl(METHOD_RECENT, null);
+        return downloadGalleryItems(url);
+    }
 
-        String url = Uri.parse("https://api.flickr.com/services/rest/")
-                .buildUpon()
-                .appendQueryParameter("method", "flickr.photos.getRecent")
-                .appendQueryParameter("api_key", API_KEY)
-                .appendQueryParameter("format", "json")
-                .appendQueryParameter("nojsoncallback", "1")
-                .appendQueryParameter("extras", "url_s")    // url_s는 스몰사이즈 이미지
-                .build().toString();
+    public ArrayList<GalleryItem> searchPhotos(String query) {
+        String url = buildUrl(METHOD_SEARCH, query);
+        return downloadGalleryItems(url);
+    }
+
+    private String buildUrl(String method, String query) {
+        Uri.Builder uriBuilder = ENDPOINT.buildUpon().appendQueryParameter("method", method);
+        if (method.equals(METHOD_SEARCH)) {
+            uriBuilder.appendQueryParameter("text", query);
+        }
+        return uriBuilder.build().toString();
+    }
+
+    private ArrayList<GalleryItem> downloadGalleryItems(String url) {
+        ArrayList<GalleryItem> items = new ArrayList<>();
 
         try {
             String jsonString = getUrlString(url);
