@@ -10,9 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -83,7 +86,7 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     // AsyncTask
-    class FetchItemsTask extends AsyncTask<Void, Void, ArrayList<GalleryItem>> {
+    class FetchItemsTask extends AsyncTask<String, Void, ArrayList<GalleryItem>> {
         // 쓰레드에서 직접 ui에 접근하면 크래쉬가 나는데
         // AsyncTask는 쓰레드와 핸들러(UI쪽)가 합쳐진 개념으로
         // ui쪽을 호출하여도 된다.
@@ -97,10 +100,13 @@ public class PhotoGalleryFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<GalleryItem> doInBackground(Void... params) {
+        protected ArrayList<GalleryItem> doInBackground(String... params) {
             // 쓰레드 내부라고 보면 된다.
             // 여기서 리턴한게 onPostExecute로 넘어간다.
-            return new FlickrFetchr().searchPhotos("android");
+            if (params[0].equals(""))
+                return new FlickrFetchr().fetchRecentPhotos();
+            else
+                return new FlickrFetchr().searchPhotos(params[0]);
         }
     }
 
@@ -112,7 +118,7 @@ public class PhotoGalleryFragment extends Fragment {
         // 메뉴가 있다는걸 알려줘야 onCreateOptionsMenu()가 호출됨
         setHasOptionsMenu(true);
 
-        new FetchItemsTask().execute();
+        new FetchItemsTask().execute("");
 
         // 썸네일 다운로더
         mThumbnailDownloader = new ThumbnailDownloader(responseHandler);
@@ -147,6 +153,22 @@ public class PhotoGalleryFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_photo_gallery, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("SearchView", "QueryText : " + query);
+                new FetchItemsTask().execute(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     @Override
