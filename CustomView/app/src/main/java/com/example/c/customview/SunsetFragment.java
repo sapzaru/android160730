@@ -1,5 +1,7 @@
 package com.example.c.customview;
 
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,12 +52,25 @@ public class SunsetFragment extends Fragment {
                 .ofFloat(mSunView, "y", sunYStart, sunYEnd)
                 .setDuration(3000);
         heightAnimator.setInterpolator(new AccelerateInterpolator());
-        heightAnimator.start();
 
+        // 하늘 색
         ObjectAnimator sunsetSkyAnimator = ObjectAnimator
                 .ofInt(mSkyView, "backgroundColor", mBlueSkyColor, mSunsetSkyColor)
                 .setDuration(3000);
-        sunsetSkyAnimator.start();
+        sunsetSkyAnimator.setEvaluator(new ArgbEvaluator());    // 색 변경을 부드럽게
 
+        ObjectAnimator nightSkyAnimator = ObjectAnimator
+                .ofInt(mSkyView, "backgroundColor", mSunsetSkyColor, mNightSkyColor)
+                .setDuration(1500);
+        nightSkyAnimator.setEvaluator(new ArgbEvaluator());
+
+        //heightAnimator.start();
+        //sunsetSkyAnimator.start();
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(heightAnimator)    // 같이
+                .with(sunsetSkyAnimator)    // 하고
+                .before(nightSkyAnimator);  // nightSkyAnimator의 앞에 play를 진행
+        animatorSet.start();
     }
 }
