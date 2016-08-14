@@ -178,6 +178,13 @@ public class PhotoGalleryFragment extends Fragment {
                 return false;
             }
         });
+
+        MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
+        if (PollService.isServiceAlarmOn(getActivity())) {
+            toggleItem.setTitle("stop polling");
+        } else {
+            toggleItem.setTitle("start polling");
+        }
     }
 
     private void updateItems() {
@@ -194,6 +201,8 @@ public class PhotoGalleryFragment extends Fragment {
         } else if (item.getItemId() == R.id.menu_item_toggle_polling) {
             boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
             PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
+            // 옵션을 다시 만든다.
+            getActivity().invalidateOptionsMenu();
         }
         return super.onOptionsItemSelected(item);
     }

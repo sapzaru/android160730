@@ -2,11 +2,14 @@ package com.example.c.photogallery;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.util.List;
@@ -68,6 +71,18 @@ public class PollService extends IntentService {
             Log.d("PollService", "Got old data");
         } else {
             Log.d("PollService", "Got new data");
+            Intent photoIntent = new Intent(/*PollService.*/this, PhotoGalleryActivity.class);
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, photoIntent, 0);
+            Notification notification = new NotificationCompat.Builder(this)    // 하위호환위해Compat
+                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                        .setContentTitle("PhotoGallery")
+                                        .setContentText("Got new data")
+                                        .setContentIntent(pIntent)
+                                        .setAutoCancel(true)
+                                        .build();
+
+            NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+            manager.notify(0, notification);
         }
 
         QueryPreperence.setLastResultId(this, resultId);
