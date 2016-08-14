@@ -54,6 +54,11 @@ public class BoxDrawingView extends View {
                 break;
         }
 
+        // 이런것을 활용하면 TextView 같은것도 터치 이번트로 FrameLayout 같은
+        // ViewGroup 내에서 드래그 앤 드롭으로 포지션을 바꿔서 위치를
+        // 이동시킬 수 있지 않을까 생각해봄
+
+        // true를 리턴해 줘야 처리가 된다.
         //return super.onTouchEvent(event);
         return true;
     }
