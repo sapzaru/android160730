@@ -1,5 +1,6 @@
 package com.example.c.photogallery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -63,7 +64,10 @@ public class PhotoGalleryFragment extends Fragment {
             //startActivity(intent);
 
             // 웹뷰로 보기
-
+            Intent intent = new Intent(getActivity(), PhotoPageActivity.class);
+            // Uri일때는 putExtra대신 setData로 편하게 넘길수 있겠다.
+            intent.setData(mGalleryItem.getPhotoPageUri());
+            startActivity(intent);
         }
     }
 
