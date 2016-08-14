@@ -1,8 +1,10 @@
 package com.example.c.customview;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -71,6 +73,31 @@ public class SunsetFragment extends Fragment {
         animatorSet.play(heightAnimator)    // 같이
                 .with(sunsetSkyAnimator)    // 하고
                 .before(nightSkyAnimator);  // nightSkyAnimator의 앞에 play를 진행
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Intent intent = new Intent(getActivity(), DragAndDrawActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
         animatorSet.start();
     }
 }
