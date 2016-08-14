@@ -36,18 +36,34 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     // 뷰홀더 (리사이클러뷰 어댑터가 가져다가 작업)
-    class PhotoHolder extends RecyclerView.ViewHolder {
+    class PhotoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mItemImageView;
+        private GalleryItem mGalleryItem;
 
         public PhotoHolder(View itemView) {
             super(itemView);
             // 갤러리아이템의 루트가 이미지뷰라서 이렇게 가능
             mItemImageView = (ImageView) itemView;
+            mItemImageView.setOnClickListener(this);
         }
 
         public void bindDrawable(Drawable drawable) {
             // 외부에서 만들어서 준비가 된걸 넘겨서 세팅만.. (네트워크 속도 문제..)
             mItemImageView.setImageDrawable(drawable);
+        }
+
+        public void bindGalleryItem(GalleryItem galleryItem) {
+            mGalleryItem = galleryItem;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // 암시적 인텐트로 웹브라우저 호출
+            //Intent intent = new Intent(Intent.ACTION_VIEW, mGalleryItem.getPhotoPageUri());
+            //startActivity(intent);
+
+            // 웹뷰로 보기
+
         }
     }
 
@@ -72,6 +88,7 @@ public class PhotoGalleryFragment extends Fragment {
             // 스크롤되면서 데이터 바인드 시켜주는 부분
             // 뷰홀더에 멀 해라 알려주는 부분..
             GalleryItem item = mGalleryItems.get(position);
+            holder.bindGalleryItem(item);
             Drawable d = getResources().getDrawable(R.mipmap.ic_launcher);
             holder.bindDrawable(d);
 
